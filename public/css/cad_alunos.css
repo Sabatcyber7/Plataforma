@@ -1,0 +1,17 @@
+.div_pai_alunos {
+padding: 20px;
+overflow-y: auto;
+display: block;
+max-height: 50em; 
+}
+
+label {
+	color: #045FB4;
+}
+
+
+.teste {
+padding: 20px;
+
+
+}

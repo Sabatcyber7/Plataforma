@@ -15,8 +15,22 @@ class CreateAlunosTable extends Migration
     {
         Schema::create('alunos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name',128);
-            $table->string('email',256);
+            
+            $table->string('nome_aluno');
+            $table->string('cpf');
+            $table->string('sexo');
+            $table->string('dt_nascimento');
+            $table->string('endereco');
+            $table->string('nome_mae');
+            $table->string('nome_pai');
+            $table->string('estado');
+            $table->string('cidade');
+            $table->string('email');
+            $table->string('telefone');
+            $table->string('turma');
+            $table->string('deficiencia');
+            $table->string('obs');
+
             $table->timestamps();
         });
     }
