@@ -22,7 +22,7 @@
 
                     <br>
                     
-                    <a href="{{ route('cad_alunos') }}"><img src="./img/cad_aluno.jpg" alt="HTML tutorial" style="width:60px;height:50px;">Cadastro de Alunos</a>
+                    <a href="{{ route('ponte') }}"><img src="./img/cad_aluno.jpg" alt="HTML tutorial" style="width:60px;height:50px;">Cadastro de Alunos</a>
                     <br>    
                     
 

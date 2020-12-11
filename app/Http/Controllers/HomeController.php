@@ -37,6 +37,14 @@ class HomeController extends Controller
         return view('home');
     }
 
+public function create()
+        {
+
+return view('create_alunos.create');
+        }
+
+
+
     public function cad_alunos(){
 
         $estados = DB::table('estados')->get(['id','estado'])->unique();
@@ -60,7 +68,7 @@ class HomeController extends Controller
         
         $turma = DB::table('alunos')->get(['turma'])->unique();
         $def = DB::table('alunos')->get(['deficiencia'])->unique();
-        
+
         $bancos = DB::table('alunos')->paginate(4);
 
         return view('responsaveis',compact('bancos','turma','def'));
@@ -138,5 +146,39 @@ if(!$localiza)
         }
 }
 
+ public function excluir_aluno($id){
+       
+       
+        $excluir = alunos::find($id)->get()->first();
+        $excluir->delete();
+
+        $turma = DB::table('alunos')->get(['turma'])->unique();
+        $def = DB::table('alunos')->get(['deficiencia'])->unique();
+
+        $bancos = DB::table('alunos')->paginate(4);
+
+
+        return view('responsaveis',compact('bancos','turma','def'));
+       
+        }
+
+
+public function edit_aluno($id){
+
+            $editado = alunos::findOrFail($id);
+            return view('update', ['editado' => $editado]);
+
+        }
+
+        public function update_aluno($id, Request $request){
+
+        $usuario = aluno::findOrFail($id);
+        $usuario->update($request->all());
+        
+
+        
+         return view('alunos');
+
+        }
 
 }
