@@ -1,6 +1,6 @@
 .div_pai_alunos {
 padding: 20px;
-overflow-y: auto;
+
 display: block;
 max-height: 50em; 
 }
@@ -14,4 +14,10 @@ label {
 padding: 20px;
 
 
+}
+
+ .corpo {
+ background-image: url(./img/back.jpg);
+ background-position: center; 
+ background-position: 25% 75%;
 }

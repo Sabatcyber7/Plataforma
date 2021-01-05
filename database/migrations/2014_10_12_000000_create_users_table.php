@@ -17,6 +17,15 @@ class CreateUsersTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('cadastrar')->default('NAO');
+            $table->string('ciclo')->default('NAO');
+            $table->string('detalhes')->default('NAO');
+            $table->string('editar')->default('NAO');
+            $table->string('env_email')->default('NAO');
+            $table->string('excluir')->default('NAO');
+            $table->string('historico')->default('NAO');
+            $table->string('imprimir')->default('NAO');
+            $table->string('master')->default('NAO');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

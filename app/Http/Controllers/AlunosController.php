@@ -3,18 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Eastwest\Json\Exceptions\EncodeDecode;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use App\Estado;
 use App\Cidade;
-use App\Turma;
-use App\Deficiencia;
+use App\Fila;
+use App\Perfil;
 use App\Alunos;
+use App\user;
 
+
+date_default_timezone_set('America/Sao_Paulo');
 
 
 
 class AlunosController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      *
@@ -44,18 +51,43 @@ class AlunosController extends Controller
     public function store(Request $request)
     {
 
+$mes = \Carbon\Carbon::parse($request->dt_nascimento)->format('m');
+$dat_cad = date('d-m-Y');
+$logado = auth()->user()->name;
 
-if($request->contrato != "" && $request->nome_aluno != "" && $request->sexo != ""
-    && $request->dt_nascimento != "" && $request->endereco != "" && $request->nome_mae != ""
-    && $request->nome_pai != "" && $request->estado != "" && $request->cidade != ""  
-    && $request->email != "" && $request->telefone != "" && $request->turma != ""  
-    && $request->deficiencia != "" && $request->obs != "")
+
+$nome_r = auth::user()->name; //PEGA NOME DA PESSOA LOGADA
+$ema = auth::user()->email; // Pega email da pessoa logada
+$ip = getenv("REMOTE_ADDR"); //pega ip da máquina
+$linha = "----------------------------------------------------------";
+$request->historico = ".";
+
+if($request->status == "")
+{
+    $request->status = "CADASTRADO";
+}
+
+if($request->contrato != ""
+ && $request->nome_aluno != "" 
+ && $request->sexo != ""
+ && $request->dt_nascimento != ""
+ && $request->endereco != "" 
+ && $request->estado != ""
+ && $request->cidade != ""
+ && $request->bairro != "" 
+ && $request->email != "" 
+ && $request->telefone != ""
+ && $request->turma != ""  
+ && $request->perfil != ""
+ && $request->status != ""  
+ && $request->historico != ""
+ && $request->obs != "")
 
 {
 
+$request->historico = "Cadastrado por: ".$nome_r."\r\n"." Email: ".$ema."\r\n"."Data/Horário: ".\Carbon\Carbon::parse(NOW())->format('d/m/Y H:i:s')."\r\n"."Departamento: ".$request->turma."\r\n"."Status: ".$request->status."\r\n"."Observações: ".$request->obs."\r\n"."IP: ".$ip."\r\n".$linha;
 
 $contra = alunos::where('contrato',$request->contrato)->first();
-
 
 if(!$contra)
 {
@@ -63,16 +95,20 @@ if(!$contra)
         'contrato' => $request->contrato,
         'nome_aluno' => $request->nome_aluno,
         'sexo' => $request->sexo,
-        'dt_nascimento' => $request->dt_nascimento,
+        'dt_nascimento' => \Carbon\Carbon::parse($request->dt_nascimento)->format('d-m-Y'),
+        'mes' => $mes,
         'endereco' => $request->endereco,
-        'nome_mae' => $request->nome_mae,
-        'nome_pai' => $request->nome_pai,
         'estado' => $request->estado,
         'cidade' => $request->cidade,
+        'bairro' => $request->bairro,
         'email' => $request->email,
         'telefone' => $request->telefone,
         'turma' => $request->turma,
-        'deficiencia' => $request->deficiencia,
+        'perfil' => $request->perfil,
+        'historico' => $request->historico,
+        'dt_cadastro' => $dat_cad,
+        'status' => $request->status,
+        'usuario' => $logado,
         'obs' => $request->obs
 
         ]);
@@ -129,12 +165,24 @@ else
      */
     public function update(Request $request, $id)
     {
-      
-if($request->contrato != "" && $request->nome_aluno != "" && $request->sexo != ""
-    && $request->dt_nascimento != "" && $request->endereco != "" && $request->nome_mae != ""
-    && $request->nome_pai != "" && $request->estado != "" && $request->cidade != ""  
-    && $request->email != "" && $request->telefone != "" && $request->turma != ""  
-    && $request->deficiencia != "" && $request->obs != "")
+$logado = auth()->user()->name;
+$request->historico = "Alterado: ".$logado;
+
+if($request->contrato != ""
+ && $request->nome_aluno != "" 
+ && $request->sexo != ""
+ && $request->dt_nascimento != ""
+ && $request->endereco != "" 
+ && $request->estado != ""
+ && $request->cidade != ""
+ && $request->bairro != ""
+ && $request->email != "" 
+ && $request->telefone != ""
+ && $request->turma != ""  
+ && $request->status != ""  
+ && $request->perfil != ""
+ && $request->historico != ""
+ && $request->obs != "")
 
 {
 
@@ -147,7 +195,7 @@ if($contra)
 
     alunos::find($id)->update($request->all());
 
-      $retorno["message"] = "Registro incluído com sucesso";
+      $retorno["message"] = "Registro alterado com sucesso";
       return response()->json($retorno);
     }
     else
@@ -179,15 +227,41 @@ else
       $alunos = alunos::findOrFail($id);
       $alunos->delete();
 
-      $deficiencias = deficiencia::get()->unique();
-      $turmas = turma::get()->unique();
+      $logado = auth()->user()->email;
+      $usuario = user::where('email',$logado)->first();
+
+
+      $perfil = perfil::get()->unique();
+      $filas = fila::get()->unique();
             
-      return redirect()->back()->with('alunos.listar',compact('bancos','turmas','deficiencias'));
+      return redirect()->back()->with('alunos.listar',compact('bancos','filas','perfil','logado','usuario'));
 
         
     }
 
+public function alunos_encaminhar(Request $request, $id)
+{
 
+$nome_r = auth::user()->name; //PEGA NOME DA PESSOA LOGADA
+$ema = auth::user()->email; // Pega email da pessoa logada
+$ip = getenv("REMOTE_ADDR"); //pega ip da máquina
+$linha = "----------------------------------------------------------";
 
+$data = json_decode($request->getContent());
+
+$alunos = alunos::findOrFail($request->id);
+$alunos->turma = $data[0];
+$alunos->status = $data[1];
+$alunos->obs = $data[2];
+
+$alunos->historico = $alunos->historico."\r\n"."Usuario: ".$nome_r."\r\n"." Email: ".$ema."\r\n"."Data: ".Carbon::now()."\r\n"."Depart: ".$data[0]."\r\n"."Status: ".$data[1]."\r\n"."Obs: ".$data[2]."\r\n"."IP: ".$ip."\r\n".$linha;
+
+$alunos->update();
+
+$retorno["message"] = "Encaminhamento registrado no histórico";
+return response()->json($retorno);
+
+//return redirect()->back()->with('alunos.listar');
+}
 
 }

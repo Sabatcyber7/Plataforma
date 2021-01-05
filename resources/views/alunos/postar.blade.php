@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('update')
+@section('postar')
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
@@ -8,22 +8,19 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
 
-
-
 <div>
-
 <ul class="nav nav-tabs">
   <li class="nav-item">
-    <a class="nav-link active" href="{{ route('ponte') }}">Alterar registro</a>
+    <a class="nav-link active" href="{{ route('ponte') }}">Cadastrar Amigo</a>
   </li>
-
+  
   <li class="nav-item">
     <a class="nav-link " href="{{ route('lista') }}">Banco de amigos</a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="{{ route('postar') }}">Localizar/Detalhes</a>
-  </li>
   
+  <li class="nav-item">
+    <a class="nav-link " href="{{ route('postar') }}">Localizar/Detalhes</a>
+  </li>
 </ul>
 </div>
 <br>
@@ -38,19 +35,19 @@
     @csrf
 
   <div class="form-group">
-    <label for="formGroupExampleInput">Matrícula</label>
-    <input type="text" name="contrato" id="contrato" class="form-control" value="{{$bancos->contrato}}" style="color:#DF7401">
+    <label for="formGroupExampleInput">Contrato</label>
+    <input type="text" name="contrato" id="contrato" class="form-control" id="formGroupExampleInput">
   </div>
 
  <div class="form-group">
-    <label for="formGroupExampleInput">Nome do Aluno</label>
-    <input type="text" name="nome_aluno" id="nome_aluno" class="form-control" value="{{$bancos->nome_aluno}}" style="color:#DF7401">
+    <label for="formGroupExampleInput">Nome do amigo</label>
+    <input type="text" name="nome_aluno" id="nome_aluno" class="form-control" id="formGroupExampleInput">
   </div>
 
    <div class="form-group">
     <label for="exampleFormControlSelect2">Sexo</label>
-    <select  class="form-control" name="sexo" id="sexo" style="color:#DF7401">
-      <option>{{$bancos->sexo}}</option>
+    <select  class="form-control" name="sexo" id="sexo">
+      <option></option>
       <option value="Masculino">Masculino</option>
       <option value="Feminino">Feminino</option>
     </select>
@@ -58,22 +55,32 @@
 
 <div class="form-group">
     <label for="formGroupExampleInput">Data de nascimento</label>
-    <input type="text" name="dt_nascimento" id="dt_nascimento" class="form-control" value="{{$bancos->dt_nascimento}}" style="color:#DF7401" >
+    <input type="date" name="dt_nascimento" class="form-control" id="formGroupExampleInput">
 </div>
-
 
  <div class="form-group">
     <label for="formGroupExampleInput">Endereço</label>
-    <input type="text" name="endereco" class="form-control" value="{{$bancos->endereco}}" style="color:#DF7401">
+    <input type="text" name="endereco" class="form-control" id="formGroupExampleInput" >
   </div>
+
+<div class="form-group">
+    <label for="formGroupExampleInput">Nome da Mãe</label>
+    <input type="text" name="nome_mae" class="form-control" id="formGroupExampleInput" >
+  </div>
+
+<div class="form-group">
+    <label for="formGroupExampleInput">Nome do Pai</label>
+    <input type="text" name="nome_pai" class="form-control" id="formGroupExampleInput">
+  </div>
+
 
   <div class="form-group">
     <label for="exampleFormControlSelect1">Estados</label>
 
 @if(isset($estados))
-<select class="form-control" name="estado" id="estado" style="color:#DF7401" onchange="pesquisar()">
+<select class="form-control" name="estado" id="estado" onchange="pesquisar()">
 
-    <option>{{$bancos->estado}}</option>
+    <option ></option>
 
         @foreach($estados as $uf)
 
@@ -88,42 +95,28 @@
 
   <div class="form-group">
     <label for="exampleFormControlSelect2">Cidades</label>
-    <select  class="form-control" name="cidade" id="cidade" style="color:#DF7401">
-      <option>{{$bancos->cidade}}</option>
+    <select  class="form-control" name="cidade" id="cidade">
+      
     </select>
   </div>
-
-<div class="form-group">
-    <label for="exampleFormControlSelect1">Bairro</label>
-
-@if(isset($bairro))
-<select class="form-control" name="bairro" id="bairro" style="color:#DF7401">
-    <option >{{$bancos->bairro}}</option>
-     @foreach($bairro as $bai)
-        <option style="font-size: 15px;" value="{{$bai->nome}}">{{$bai->nome}}</option>
-     @endforeach
-    </select>
-    @endif
- </div>
-
 
 <div class="form-group">
     <label for="formGroupExampleInput">Email</label>
-    <input type="email" name="email" class="form-control" style="color:#DF7401" value="{{$bancos->email}}" >
+    <input type="email" name="email" class="form-control" id="formGroupExampleInput" >
   </div>
 
 <label for="txttelefone">Telefone</label>
-<input type="tel" name="telefone" id="telefone" pattern="\([0-9]{2}\)[\s][0-9]{4}-[0-9]{4,5}" class="form-control" value="{{$bancos->telefone}}" style="color:#DF7401" />
+<input type="tel" name="telefone" id="telefone" pattern="\([0-9]{2}\)[\s][0-9]{4}-[0-9]{4,5}" class="form-control" />
 <script type="text/javascript">$("#telefone").mask("(00) 0000-00009");</script>
 
 
 <div class="form-group">
-    <label for="exampleFormControlSelect1">Departamento</label>
+    <label for="exampleFormControlSelect1">Turma</label>
 
 @if(isset($turmas))
-<select class="form-control" name="turma" id="turma" style="color:#DF7401" value="{{$bancos->turma}}">
+<select class="form-control" name="turma" id="turma">
 
-    <option>{{$bancos->turma}}</option>
+    <option ></option>
 
         @foreach($turmas as $tur)
 
@@ -133,33 +126,17 @@
     @endif
  </div>
 
- <div class="form-group">
-    <label for="exampleFormControlSelect1">Status</label>
-
-@if(isset($status))
-<select class="form-control" name="status" id="status" style="color:#DF7401" value="{{$bancos->status}}">
-
-    <option>{{$bancos->status}}</option>
-
-        @foreach($status as $st)
-
-    <option style="font-size: 15px;" value="{{$tur->turma}}">{{$st->status}}</option>
-        @endforeach
-    </select>
-    @endif
- </div>
-
 <div class="form-group">
-    <label for="exampleFormControlSelect1">Perfil</label>
+    <label for="exampleFormControlSelect1">Deficiência</label>
 
-@if(isset($perfil))
-<select class="form-control" name="perfil" id="perfil" style="color:#DF7401">
+@if(isset($deficiencias))
+<select class="form-control" name="deficiencia" id="deficiencia">
 
-    <option>{{$bancos->perfil}}</option>
+    <option ></option>
 
-        @foreach($perfil as $per)
+        @foreach($deficiencias as $deficien)
 
-    <option style="font-size: 15px;" value="{{$per->perfil}}">{{$per->perfil}}</option>
+    <option style="font-size: 15px;" value="{{$deficien->deficiencia}}">{{$deficien->deficiencia}}</option>
         @endforeach
     </select>
     @endif
@@ -169,11 +146,11 @@
 
    <div class="form-group">
     <label for="exampleFormControlTextarea1">Observações</label>
-    <textarea class="form-control" name="obs" id="exampleFormControlTextarea1" rows="3" style="color:#DF7401">{{$bancos->obs}}</textarea>
+    <textarea class="form-control" name="obs" id="exampleFormControlTextarea1" rows="3" style="color: red;"></textarea>
   </div>
  
 
- <button type="submit" class="btn btn-primary">Atualizar</button>
+ <button type="submit" class="btn btn-primary">Salvar</button>
  <button type="reset" class="btn btn-primary" onblur= "rolar()">LIMPAR</button >
  
 
@@ -208,7 +185,7 @@ $.ajax({
  headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
-url: "{{ route('alunos_update', [$id]) }}",
+url: '/alunos',
 type: "post",
 data: $(this).serialize(),
 dataType: 'json',
@@ -216,6 +193,10 @@ dataType: 'json',
 success: function(response) {
 
     alert(response.message);
+
+$().ready(function(){
+$("#formulario").animate({ scrollTop: 1000 }, 3000);
+});
 
 }
 
@@ -231,7 +212,5 @@ success: function(response) {
  <script type="text/javascript">
     $("#telefone").mask("(00) 0000-0000");
     </script>
-
-
 
 @endsection

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Estado;
 use App\Cidade;
 use App\Alunos;
+use App\user;
 
 class HomeController extends Controller
 {
@@ -34,7 +35,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        //checar se o email do usuário logado está do banco de dados autorizados e quais autorizacoes este usuário possui e passar via compact as variáveis para serem checadas na VIEW HOME (O BANCO AUTORIZADOS PRECISA SER CRIADO)
+        $logado = auth()->user()->email;
+        $usuario = user::where('email',$logado)->first();
+        
+        return view('home',compact('usuario','logado'));
+
+//        return view('home');
     }
 
 public function create()
@@ -69,9 +76,13 @@ return view('create_alunos.create');
         $turma = DB::table('alunos')->get(['turma'])->unique();
         $def = DB::table('alunos')->get(['deficiencia'])->unique();
 
+        $logado = auth()->user()->email;
+        $usuario = user::where('email',$logado)->first();
+
+
         $bancos = DB::table('alunos')->paginate(4);
 
-        return view('responsaveis',compact('bancos','turma','def'));
+        return view('responsaveis',compact('bancos','turma','def','logado','usuario'));
        
         }
 
@@ -80,10 +91,14 @@ return view('create_alunos.create');
         $turma = DB::table('alunos')->get(['turma'])->unique();
         $def = DB::table('alunos')->get(['deficiencia'])->unique();
 
+          $logado = auth()->user()->email;
+        $usuario = user::where('email',$logado)->first();
+
+
         $bancos = DB::table('alunos')->where('cpf',[$id])->paginate(4);
 
 
-        return view('responsaveis',compact('bancos','turma','def'));
+        return view('responsaveis',compact('bancos','turma','def','logado','usuario'));
        
         }
 
@@ -93,9 +108,13 @@ return view('create_alunos.create');
         $turma = DB::table('alunos')->get(['turma'])->unique();
         $def = DB::table('alunos')->get(['deficiencia'])->unique();
 
+        $logado = auth()->user()->email;
+        $usuario = user::where('email',$logado)->first();
+
+
         $bancos = DB::table('alunos')->where('turma',[$id])->paginate(4);
 
-        return view('responsaveis',compact('bancos','turma','def'));
+        return view('responsaveis',compact('bancos','turma','def','logado','usuario'));
        
         }
     
@@ -104,9 +123,13 @@ return view('create_alunos.create');
         $turma = DB::table('alunos')->get(['turma'])->unique();
         $def = DB::table('alunos')->get(['deficiencia'])->unique();
 
+        $logado = auth()->user()->email;
+        $usuario = user::where('email',$logado)->first();
+
+
         $bancos = DB::table('alunos')->where('deficiencia',[$id])->paginate(4);
 
-        return view('responsaveis',compact('bancos','turma','def'));
+        return view('responsaveis',compact('bancos','turma','def','logado','usuario'));
        
         }
     
@@ -155,30 +178,27 @@ if(!$localiza)
         $turma = DB::table('alunos')->get(['turma'])->unique();
         $def = DB::table('alunos')->get(['deficiencia'])->unique();
 
+        $logado = auth()->user()->email;
+        $usuario = user::where('email',$logado)->first();
+
+
         $bancos = DB::table('alunos')->paginate(4);
 
 
-        return view('responsaveis',compact('bancos','turma','def'));
+        return view('responsaveis',compact('bancos','turma','def','logado','usuario'));
        
         }
 
 
 public function edit_aluno($id){
 
-            $editado = alunos::findOrFail($id);
-            return view('update', ['editado' => $editado]);
+        $editado = alunos::findOrFail($id);
+        $logado = auth()->user()->email;
+        $usuario = user::where('email',$logado)->first();
+            
+        return view('update',compact('editado','logado','usuario'));
 
         }
 
-        public function update_aluno($id, Request $request){
-
-        $usuario = aluno::findOrFail($id);
-        $usuario->update($request->all());
-        
-
-        
-         return view('alunos');
-
-        }
 
 }

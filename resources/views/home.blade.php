@@ -5,7 +5,8 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Plataform de Ensino</div>
+                <div class="card-header">Ciclo de Amor</div>
+
 
                 <div class="card-body">
                     @if (session('status'))
@@ -18,14 +19,14 @@
           
                     <hr>
                     
-                    <a href="default.asp"><img src="./img/turma.jpg" alt="HTML tutorial" style="width:58px;height:48px;"> Cadastro de Turma</a>
-
-                    <br>
-                    
-                    <a href="{{ route('ponte') }}"><img src="./img/cad_aluno.jpg" alt="HTML tutorial" style="width:60px;height:50px;">Cadastro de Alunos</a>
+                    @if ($usuario->cadastrar != 'NAO' || $logado == 'alex.cyber@hotmail.com')                     
+                    <a href="{{ route('ponte') }}"><img src="./img/juridico2.png" alt="HTML tutorial" style="width:60px;height:50px;"> Cadastrar amigo visitante </a>
+                    @endif
                     <br>    
                     
-
+                    @if ($logado == 'alex.cyber@hotmail.com')
+                    <a href="{{ route('ciclo') }}"><img src="./img/cadeado.jpg" alt="HTML tutorial" style="width:60px;height:50px;"> Permissões</a>
+                    @endif
 
                 </div>
             </div>

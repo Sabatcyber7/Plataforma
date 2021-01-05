@@ -19,17 +19,21 @@ class CreateAlunosTable extends Migration
             $table->string('nome_aluno');
             $table->string('sexo');
             $table->string('dt_nascimento');
+            $table->string('mes');
             $table->string('endereco');
-            $table->string('nome_mae');
-            $table->string('nome_pai');
             $table->string('estado');
             $table->string('cidade');
+            $table->string('bairro');
             $table->string('email');
             $table->string('telefone');
             $table->string('turma');
-            $table->string('deficiencia');
-            $table->string('obs');
-
+            $table->string('perfil');
+            $table->string('status');
+            $table->longText('obs');
+            $table->longText('historico');
+            $table->string('dt_cadastro');
+            $table->string('usuario');
+            
             $table->timestamps();
         });
     }
